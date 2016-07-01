@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Erik Bulow" />
+
+<meta name="date" content="2016-07-01" />
+
+<title>rccdates</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">rccdates</h1>
+<h4 class="author"><em>Erik Bulow</em></h4>
+<h4 class="date"><em>2016-07-01</em></h4>
+
+
+
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p>Registers managed by the Swedish Cancer centers (quality registers and the cancer register) have date variables in different formats. This package helps to recognise and handle these dates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rccdates)</code></pre></div>
+</div>
+<div id="ordinary-dates" class="section level1">
+<h1>Ordinary dates</h1>
+<p>RCC dates are usually in the form <code>%Y-%m-%d</code>, such as “2016-06-17”. These are recognised by ordinary R-functions such as <code>as.Date</code> if there are no missing values or if missing values are coded as NA. It is however common with RCC data that missing dates are coded as empty strings. Then:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;2016-06-17&quot;</span>)
+<span class="kw">as.Date</span>(d)</code></pre></div>
+<pre><code>## Error in charToDate(x): character string is not in a standard unambiguous format</code></pre>
+<p>The <code>as.Date</code> function (not the plural) might then be easier to use.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(d)</code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] NA           &quot;2016-06-17&quot;</code></pre>
+</div>
+<div id="non-standard-dates" class="section level1">
+<h1>Non standard dates</h1>
+<p>The oringinal motivation for the package was to handle old date variables from the cancer register. Days and even months are sometimes coded as “00” (unknown). If so happens, <code>as.Dates</code> (note the plural) might still recognise the date and will replace “00” by an approximate date:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Date</span>(<span class="st">&quot;2000-01-00&quot;</span>) <span class="co"># as.Date fails!</span></code></pre></div>
+<pre><code>## Error in charToDate(x): character string is not in a standard unambiguous format</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(<span class="st">&quot;2000-01-00&quot;</span>) <span class="co"># Missing day</span></code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] &quot;2000-01-15&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(<span class="st">&quot;2000-00-01&quot;</span>) <span class="co"># Missing month</span></code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] &quot;2000-07-01&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(<span class="st">&quot;2000-00-00&quot;</span>) <span class="co"># Missing month and day</span></code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] &quot;2000-07-15&quot;</code></pre>
+<p>Some old dates might also be in the format <code>%Y%V</code> (see <code>?strptime</code>), such as “7403” for week 3 in 1974. This is tricky for four reasons:</p>
+<ul>
+<li>Exact date is unknown but has to be approximated</li>
+<li>Different countries numerate weeks of year differently. Sweden use ISO-8601 (“If the week [starting on Monday] containing 1 January has four or more days in the new year, then it is considered week 1. Otherwise, it is the last week of the previous year, and the next week is week 1.”) but R does not.</li>
+<li>Procedures for week number differ also between different operating systems</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Date</span>(<span class="st">&quot;7403&quot;</span>)</code></pre></div>
+<pre><code>## Error in charToDate(x): character string is not in a standard unambiguous format</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(<span class="st">&quot;7403&quot;</span>)</code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] &quot;1974-01-17&quot;</code></pre>
+<p>It is also possible to have a mixture of different dates within the same vector:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.Dates</span>(<span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;2000-01-01&quot;</span>, <span class="st">&quot;20000101&quot;</span>, <span class="st">&quot;20000000&quot;</span>, <span class="st">&quot;7403&quot;</span>))</code></pre></div>
+<pre><code>## x coerced to Date</code></pre>
+<pre><code>## [1] NA           NA           &quot;2000-01-01&quot; &quot;2000-01-01&quot; &quot;2000-07-15&quot;
+## [6] &quot;1974-01-17&quot;</code></pre>
+</div>
+<div id="convert-all-date-variables-to-dates" class="section level1">
+<h1>Convert all date variables to dates</h1>
+<p>Another common issue with RCC data is that the number of columns might be huge (several hundreds of variables). When data is imported to R from tab/csv-files date columns are recognised only as characters (and are therefore treated as factors by default). All date columns must than be converted to dates manually before further processing.</p>
+<p>This process might sometimes be simplified assuming common name structures of date variables such that:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1 &lt;-<span class="st"> </span>df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">important_date =</span> <span class="st">&quot;1985-05-04&quot;</span>,
+  <span class="dt">another_date =</span> <span class="st">&quot;2001-09-11&quot;</span>,
+  <span class="dt">something_else =</span> <span class="st">&quot;halleluja!&quot;</span>
+)
+<span class="kw">str</span>(df1)</code></pre></div>
+<pre><code>## 'data.frame':    1 obs. of  3 variables:
+##  $ important_date: Factor w/ 1 level &quot;1985-05-04&quot;: 1
+##  $ another_date  : Factor w/ 1 level &quot;2001-09-11&quot;: 1
+##  $ something_else: Factor w/ 1 level &quot;halleluja!&quot;: 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dts &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;dat&quot;</span>, <span class="kw">names</span>(df1))
+df1[dts] &lt;-<span class="st"> </span><span class="kw">lapply</span>(df1[dts], as.Date)
+<span class="kw">str</span>(df1)</code></pre></div>
+<pre><code>## 'data.frame':    1 obs. of  3 variables:
+##  $ important_date: Date, format: &quot;1985-05-04&quot;
+##  $ another_date  : Date, format: &quot;2001-09-11&quot;
+##  $ something_else: Factor w/ 1 level &quot;halleluja!&quot;: 1</code></pre>
+<p>It is hopefully obvious that this soultion is not optimal (for several reasons)!</p>
+<p><code>as.Dates</code> however is in fact a generic function with a method for data frames that tries to automate this process:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df2 &lt;-<span class="st"> </span><span class="kw">as.Dates</span>(df2)</code></pre></div>
+<pre><code>## The following variables were recognised as potential dates and therefore coerced to such: 
+## * important_date
+## * another_date</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(df2)</code></pre></div>
+<pre><code>## 'data.frame':    1 obs. of  3 variables:
+##  $ important_date: Date, format: &quot;1985-05-04&quot;
+##  $ another_date  : Date, format: &quot;2001-09-11&quot;
+##  $ something_else: Factor w/ 1 level &quot;halleluja!&quot;: 1</code></pre>
+<p>This can simplify date handling quite a lot!</p>
+</div>
+<div id="year-variables" class="section level1">
+<h1>Year variables</h1>
+<p>Another feature of the package is a new way to handle year data.</p>
+<p>Cohort data are often presented by year. The <code>rccdates</code> introduce a new S3 class “year”. This might be prefered to converting year to characters:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Let's make some random dates</span>
+x &lt;-<span class="st"> </span><span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="kw">sample</span>(<span class="dv">365</span>:(<span class="dv">5</span> *<span class="st"> </span><span class="dv">365</span>), <span class="dv">5</span>)
+
+<span class="co"># The year is usually treated as a string in one of two ways:</span>
+(y1 &lt;-<span class="st"> </span><span class="kw">substr</span>(x, <span class="dv">1</span>, <span class="dv">4</span>))</code></pre></div>
+<pre><code>## [1] &quot;2014&quot; &quot;2011&quot; &quot;2012&quot; &quot;2014&quot; &quot;2013&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(y2 &lt;-<span class="st"> </span><span class="kw">format</span>(x, <span class="dt">format =</span> <span class="st">&quot;%Y&quot;</span>))</code></pre></div>
+<pre><code>## [1] &quot;2014&quot; &quot;2011&quot; &quot;2012&quot; &quot;2014&quot; &quot;2013&quot;</code></pre>
+<p>This is fine as long as we just want to treat the year as a “label” but then we can than no longer use the year for any type of arithmetics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(y1) -<span class="st"> </span><span class="kw">min</span>(y1)</code></pre></div>
+<pre><code>## Error in max(y1) - min(y1): non-numeric argument to binary operator</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y1 +<span class="st"> </span><span class="dv">10</span></code></pre></div>
+<pre><code>## Error in y1 + 10: non-numeric argument to binary operator</code></pre>
+<p>We cound of course treat years as numerics instead but then we might do all sorts of crazy stuff that doesn’t make any sense at all:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y1)
+<span class="kw">log</span>(y1)</code></pre></div>
+<pre><code>## [1] 7.607878 7.606387 7.606885 7.607878 7.607381</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y1 ^<span class="st"> </span><span class="dv">3</span></code></pre></div>
+<pre><code>## [1] 8169178744 8132727331 8144865728 8169178744 8157016197</code></pre>
+<p>We can instead use the year class to only allow operations that actually make sense:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(y3 &lt;-<span class="st"> </span><span class="kw">as.year</span>(x))</code></pre></div>
+<pre><code>## 
+## 2011 2012 2013 2014 
+##    1    1    1    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(y3) -<span class="st"> </span><span class="kw">min</span>(y3)</code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y3 +<span class="st"> </span><span class="dv">10</span></code></pre></div>
+<pre><code>## [1] &quot;2024&quot; &quot;2021&quot; &quot;2022&quot; &quot;2024&quot; &quot;2023&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">log</span>(y3)</code></pre></div>
+<pre><code>## Error in log(y3): non-numeric argument to mathematical function</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y3 ^<span class="st"> </span><span class="dv">3</span></code></pre></div>
+<pre><code>## Error in y3^3: non-numeric argument to binary operator</code></pre>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

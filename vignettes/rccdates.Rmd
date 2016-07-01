@@ -1,0 +1,144 @@
+---
+title: "rccdates"
+author: "Erik Bulow"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rccdates}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Intro
+
+Registers managed by the Swedish Cancer centers (quality registers and the cancer register) have date variables in different formats. This package helps to recognise and handle these dates.
+
+```{r}
+library(rccdates)
+```
+
+
+# Ordinary dates
+
+
+RCC dates are usually in the form `%Y-%m-%d`, such as "2016-06-17". These are recognised by ordinary R-functions such as `as.Date` if there are no missing values or if missing values are coded as NA. It is however common with RCC data that missing dates are coded as empty strings. Then:
+
+```{r, error = TRUE, purl = FALSE}
+d <- c("", "2016-06-17")
+as.Date(d)
+```
+
+The `as.Date` function (not the plural) might then be easier to use.
+
+```{r}
+as.Dates(d)
+```
+
+
+
+# Non standard dates
+
+The oringinal motivation for the package was to handle old date variables from the cancer register. Days and even months are sometimes coded as "00" (unknown). If so happens, `as.Dates` (note the plural) might still recognise the date and will replace "00" by an approximate date:
+
+```{r, error = TRUE, purl = FALSE}
+as.Date("2000-01-00") # as.Date fails!
+as.Dates("2000-01-00") # Missing day
+as.Dates("2000-00-01") # Missing month
+as.Dates("2000-00-00") # Missing month and day
+```
+
+
+Some old dates might also be in the format `%Y%V` (see `?strptime`), such as "7403" for week 3 in 1974. This is tricky for four reasons:
+
+* Exact date is unknown but has to be approximated
+* Different countries numerate weeks of year differently. Sweden use ISO-8601 ("If the week [starting on Monday] containing 1 January has four or more days in the new year, then it is considered week 1. Otherwise, it is the last week of the previous year, and the next week is week 1.") but R does not.
+* Procedures for week number differ also between different operating systems
+
+```{r, error = TRUE, purl = FALSE}
+as.Date("7403")
+as.Dates("7403")
+```
+
+
+It is also possible to have a mixture of different dates within the same vector:
+```{r}
+as.Dates(c("", NA, "2000-01-01", "20000101", "20000000", "7403"))
+```
+
+
+
+# Convert all date variables to dates
+
+Another common issue with RCC data is that the number of columns might be huge (several hundreds of variables). When data is imported to R from tab/csv-files date columns are recognised only as characters (and are therefore treated as factors by default).
+All date columns must than be converted to dates manually before further processing. 
+
+This process might sometimes be simplified assuming common name structures of date variables such that:
+
+```{r}
+df1 <- df2 <- data.frame(
+  important_date = "1985-05-04",
+  another_date = "2001-09-11",
+  something_else = "halleluja!"
+)
+str(df1)
+dts <- grepl("dat", names(df1))
+df1[dts] <- lapply(df1[dts], as.Date)
+str(df1)
+```
+
+It is hopefully obvious that this soultion is not optimal (for several reasons)!
+
+`as.Dates` however is in fact a generic function with a method for data frames that tries to automate this process:
+
+```{r}
+df2 <- as.Dates(df2)
+str(df2)
+```
+
+This can simplify date handling quite a lot!
+
+
+
+# Year variables
+
+Another feature of the package is a new way to handle year data.
+
+Cohort data are often presented by year. The `rccdates` introduce a new S3 class "year".
+This might be prefered to converting year to characters:
+
+```{r}
+# Let's make some random dates
+x <- Sys.Date() - sample(365:(5 * 365), 5)
+
+# The year is usually treated as a string in one of two ways:
+(y1 <- substr(x, 1, 4))
+(y2 <- format(x, format = "%Y"))
+```
+
+This is fine as long as we just want to treat the year as a "label" but then we can than no longer use the year for any type of arithmetics:
+
+```{r, error = TRUE, purl = FALSE}
+max(y1) - min(y1)
+y1 + 10
+```
+
+We cound of course treat years as numerics instead but then we might do all sorts of crazy stuff that doesn't make any sense at all:
+
+```{r}
+y1 <- as.numeric(y1)
+log(y1)
+y1 ^ 3
+```
+
+We can instead use the year class to only allow operations that actually make sense:
+```{r, error = TRUE, purl = FALSE}
+table(y3 <- as.year(x))
+max(y3) - min(y3)
+y3 + 10
+log(y3)
+y3 ^ 3
+```
+
+
+
+
